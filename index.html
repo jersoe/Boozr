@@ -24,8 +24,12 @@
         </div>
     </section>
 
+    <div class="notification is-success" id="notification">
+                
+    </div>
 
-    <div id="loginWrapper" class="notLoggedIn">
+
+    <div id="loginWrapper" class="notLoggedIn formBox">
         <div class="box">
              <div class="field">
                 <label class="label">Username</label>
@@ -61,8 +65,54 @@
                     <button class="button is-link" id="newAccountButton">Create new account</button>
                 </div>
             </div>
+            <div class="notification is-danger" id="loginError">
+                
+            </div>
         </div>
     </div>
+
+    <div id="createAccountWrapper" class="notLoggedIn formBox">
+        <div class="box">
+             <div class="field">
+                <label class="label">New Username</label>
+                <div class="control has-icons-left has-icons-right">
+                    <input class="input" type="text" placeholder="Username" id="newUsername">
+                    <span class="icon is-small is-left">
+                        <i class="fas fa-user"></i>
+                    </span>
+                    <span class="icon is-small is-right">
+                        <i class="fas fa-check"></i>
+                    </span>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">New Password</label>
+                <div class="control has-icons-left has-icons-right">
+                    <input class="input" type="email" placeholder="Password" id="newPassword">
+                    <span class="icon is-small is-left">
+                        <i class="fas fa-envelope"></i>
+                    </span>
+                    <span class="icon is-small is-right">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </span>
+                </div>
+            </div>
+           
+            <div class="field is-grouped">
+                <div class="control">
+                    <button class="button is-link" id="CreateAccountButton">Create account and log in</button>
+                </div>
+                <div class="control">
+                    <button class="button is-link" id="backToLoginButton">Back to log in</button>
+                </div>
+            </div>
+            <div class="notification is-danger" id="createAccountError">
+                
+            </div>
+        </div>
+    </div>
+
 
 
 

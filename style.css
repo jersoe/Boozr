@@ -1,7 +1,12 @@
-#loginWrapper{
+.formBox{
     width:400px;
     margin: 0 auto;
     padding-top: 5%;
+}
+
+#notification{
+    width:80%;
+    margin: 0 auto;
 }
 
 
