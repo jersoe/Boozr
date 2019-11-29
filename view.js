@@ -1,9 +1,12 @@
 class View {
-    constructor(){
+    constructor() {
         $("#notification").hide();
+        this.hideMyIngredients();
+        this.hideRecipeSearch();
+        this.hideMyFavorites();
     }
 
-    showNotLoggedIn(){
+    showNotLoggedIn() {
         $(".loggedIn").hide();
         $(".notLoggedIn").show();
 
@@ -15,39 +18,139 @@ class View {
         $("#createAccountError").hide();
 
         this.hideDashboard();
+        this.hideMyIngredients();
+        this.hideRecipeSearch();
+        this.hideMyFavorites();
     }
 
-    showLoggedIn(){
+    showLoggedIn() {
         $(".loggedIn").show();
         $(".notLoggedIn").hide();
         this.showDashboard();
     }
 
-    showDashboard(){
-        $("#dashboard").show();
+    showMyIngredients() {
+        this.hideDashboard();
+        this.hideRecipeSearch();
+        this.hideMyFavorites();
+        this.showBackToDashboard();
+        $("#myIngredients").show();
     }
 
-    hideDashboard(){
-        $("#dashboard").hide();
+    hideMyIngredients() {
+        $("#myIngredients").hide();
     }
 
-    showCreateNewAccount(){
+
+    showRecipeSearch() {
+        this.hideDashboard();
+        this.hideMyIngredients();
+        this.hideMyFavorites();
+        this.showBackToDashboard();
+        $("#recipeSearch").show();
+    }
+
+    hideRecipeSearch() {
+        $("#recipeSearch").hide();
+    }
+
+
+    showMyFavorites() {
+        this.hideDashboard();
+        this.hideRecipeSearch();
+        this.hideMyIngredients();
+        this.showBackToDashboard();
+        $("#myFavorites").show();
+    }
+
+    hideMyFavorites() {
+        $("#myFavorites").hide();
+    }
+
+    showDashboard() {
+        this.hideRecipeSearch();
+        this.hideMyIngredients();
+        this.hideMyFavorites();
+        this.hideBackToDashboard();
+        $("#dashboardWrapper").show();
+    }
+
+    hideDashboard() {
+        $("#dashboardWrapper").hide();
+    }
+
+    showBackToDashboard() {
+        $("#backToDashboard").show();
+    }
+
+
+    hideBackToDashboard() {
+        $("#backToDashboard").hide();
+    }
+
+    showCreateNewAccount() {
         $("#createAccountWrapper").show();
         $("#loginWrapper").hide();
     }
 
-    showCreateAccountError(msg){
+    showCreateAccountError(msg) {
         $("#createAccountError").show("slow");
-        $("#createAccountError").html("<p>"+msg+"</p>");
+        $("#createAccountError").html("<p>" + msg + "</p>");
     }
 
-    showLoginError(msg){
+    showLoginError(msg) {
         $("#loginError").show();
-        $("#loginError").html("<p>"+msg+"</p>");
+        $("#loginError").html("<p>" + msg + "</p>");
     }
 
-    showNotification(msg){
-        $("#notification").html("<p>"+msg+"</p>");
-        $("#notification").show(setTimeout(() => {  $("#notification").hide("slow"); }, 2000));
+    showNotification(msg) {
+        $("#notification").html("<p>" + msg + "</p>");
+        $("#notification").show(setTimeout(() => { $("#notification").hide("slow"); }, 2000));
     }
+
+    clearSuggestions() {
+        $("#suggestions").empty();
+    }
+
+    clearIngredients() {
+        $("#ingredientsGrid").empty();
+    }
+
+    addSuggestion(label, id) {
+        $("#suggestions").append(`<div class="suggestedIngredient" id="addIngredient${id}">${label}</div>`);
+    }
+
+    clearSearch() {
+        $("#ingredientSearch").val("");
+    }
+
+
+    showAnIngredient = function(id, name){
+        console.log("Hello");
+
+       let html = `<div class="ingredient-item" id="ingredientItem${id}">
+                   <article class="media">
+                            <figure class="media-left">
+                                <p class="image is-64x64">
+                                    <img src="https://www.thecocktaildb.com/images/ingredients/${name}-Small.png"></img>
+                                </p>
+                            </figure>
+                            <div class="media-content">
+                                <div class="content">
+                                    <p>
+                                     ${name}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="media-right">
+                                <button class="delete" id="deleteIngredient${id}"></button>
+                            </div>
+                        </article>
+                    </div>`;
+
+        
+        $("#ingredientsGrid").append(html);
+
+    }
+
 }

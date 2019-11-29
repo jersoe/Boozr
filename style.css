@@ -32,7 +32,45 @@ body > footer {
     justify-content: center;
 }
 
+.ingredients-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.ingredient-search-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.suggestedIngredient {
+    flex-basis: 50px;
+    background-color: #fff;
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    margin: 1em;
+    box-shadow: 0 1px 3px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.24);
+    cursor: pointer;
+    color: #363636;
+    text-align: center
+}
+
 .dashboard-item {
+    flex-basis: 250px;
+    background-color: #fff;
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    margin: 1em;
+    box-shadow: 0 1px 3px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.24);
+    cursor: pointer;
+    color: #363636;
+    text-align: center
+}
+
+.ingredient-item {
     flex-basis: 250px;
     background-color: #fff;
     padding: 1em;
@@ -55,10 +93,3 @@ body > footer {
     transform: rotateZ(-30deg);
     transition: .3s ease;
     }
-
-    #myVideo {
-        position: relative;
-        right: 0;
-        bottom: 0;
-width:100%;
-      }

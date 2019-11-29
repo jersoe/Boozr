@@ -1,14 +1,120 @@
 class Controller {
-
-    isLoggedOn = false;
+    ingredients = [];
     view;
     storage = window.localStorage;
 
     constructor(v) {
         this.view = v;
+        this.getMyIngredients();
+
     }
 
+    getMyIngredients = async function () {
+        //Retrieve my ingredients
+        try {
+            const response = await axios({
+                method: 'GET',
+                url: 'http://localhost:3000/private/ingredients',
+                headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') },
 
+            });
+            
+            if (response != null) {
+                /*response.data.result.map((item) => this.view.showAnIngredient(item,"label","pic"));*/
+                this.ingredients = response.data.result;
+            }
+
+            this.getIngredientDetails();
+
+        } catch (error) {
+        }
+    }
+
+    getIngredientDetails = async function () {
+        this.view.clearIngredients();
+
+        this.ingredients.map(async (id) => {
+
+            try {
+                const response = await axios({
+                    method: 'get',
+                    url: 'https://www.thecocktaildb.com/api/json/v1/1/lookup.php?iid=' + id
+                });
+
+                if (response.data.ingredients != null) {
+                    
+                    let name = response.data.ingredients[0].strIngredient;
+                    this.view.showAnIngredient(id,name);
+                    
+                }
+
+            } catch (error) {
+                // Error 😨
+                if (error.response) {
+                    /*
+                     * The request was made and the server responded with a
+                     * status code that falls out of the range of 2xx
+                     */
+
+                    console.log(error.response);
+
+                } else if (error.request) {
+                    /*
+                     * The request was made but no response was received, `error.request`
+                     * is an instance of XMLHttpRequest in the browser and an instance
+                     * of http.ClientRequest in Node.js
+                     */
+                    console.log(error.request);
+                } else {
+                    // Something happened in setting up the request and triggered an Error
+                    console.log('Error', error.message);
+                }
+            }
+
+        });
+
+    }
+
+    findIngredientSuggestion = async function (input) {
+        if (input != "") {
+
+            try {
+                const response = await axios({
+                    method: 'get',
+                    url: 'https://www.thecocktaildb.com/api/json/v2/9973533/search.php?i=' + input
+                });
+
+                this.view.clearSuggestions();
+                if (response.data.ingredients != null) {
+                    response.data.ingredients.map((ingr) => { this.view.addSuggestion(ingr.strIngredient, ingr.idIngredient) });
+                }
+
+            } catch (error) {
+                // Error 😨
+                if (error.response) {
+                    /*
+                     * The request was made and the server responded with a
+                     * status code that falls out of the range of 2xx
+                     */
+
+                    console.log(error.response);
+
+                } else if (error.request) {
+                    /*
+                     * The request was made but no response was received, `error.request`
+                     * is an instance of XMLHttpRequest in the browser and an instance
+                     * of http.ClientRequest in Node.js
+                     */
+                    console.log(error.request);
+                } else {
+                    // Something happened in setting up the request and triggered an Error
+                    console.log('Error', error.message);
+                }
+            }
+        } else {
+            this.view.clearSuggestions();
+        }
+    }
 
     getLoginStatus = async function () {
 
@@ -91,7 +197,7 @@ class Controller {
         }
     }
 
-    doLogin = async function(){
+    doLogin = async function () {
         let username = $("#username").val();
         let password = $("#password").val();
 
@@ -138,11 +244,30 @@ class Controller {
 
     }
 
-    doLogout = function(){
+    doLogout = function () {
         this.storage.removeItem('jwt');
         this.storage.removeItem('username');
         this.getLoginStatus();
         this.view.showNotification("Succesfully logged out!");
+    }
+
+    storeNewIngredient = async function (id) {
+        this.ingredients.push(id);
+
+        const response = await axios({
+            method: 'POST',
+            url: 'http://localhost:3000/private/ingredients',
+            headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') },
+            data: {
+                "data": this.ingredients
+            }
+        });
+        console.log(response);
+        if (response.status = "200") {
+            this.view.clearSuggestions();
+            this.view.clearSearch();
+            this.view.showNotification("Ingredient saved!");
+        }
     }
 
 }
@@ -158,6 +283,12 @@ $(document).ready(function () {
     $(document).on("click", "#backToLoginButton", () => { view.showNotLoggedIn(); });
     $(document).on("click", "#CreateAccountButton", () => { controller.createNewAccount(); });
     $(document).on("click", "#logoutButton", () => { controller.doLogout(); });
+    $(document).on("click", "#myIngredientsTile", () => { view.showMyIngredients(); });
+    $(document).on("click", "#recipeSearchTile", () => { view.showRecipeSearch(); });
+    $(document).on("click", "#myFavoritesTile", () => { view.showMyFavorites(); });
+    $(document).on("click", "#backToDashboard", () => { view.showDashboard(); });
+    $(document).on("keyup", "#ingredientSearch", (change) => { controller.findIngredientSuggestion(change.currentTarget.value); });
+    $(document).on("click", ".suggestedIngredient", (button) => { controller.storeNewIngredient(button.currentTarget.id.substring(13)); });
 
     controller.getLoginStatus();
 
