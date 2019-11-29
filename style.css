@@ -1,0 +1,16 @@
+#loginWrapper{
+    width:400px;
+    margin: 0 auto;
+    padding-top: 5%;
+}
+
+
+html,
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+body > footer {
+    margin-top: auto;
+}
