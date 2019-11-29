@@ -2,6 +2,7 @@
 <html>
 
 <head>
+    <link rel="stylesheet" href="node_modules/@fortawesome/fontawesome-free/css/all.css">
     <link rel="stylesheet" href="node_modules/bulma/css/bulma.css">
     <link rel="stylesheet" href="style.css">
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
@@ -15,26 +16,29 @@
         <div class="hero-body">
             <div class="container">
                 <h1 class="title">
-                    Boozr
+                        <i class="fas fa-cocktail"></i> Boozr
                 </h1>
                 <h2 class="subtitle">
                     Cocktail recipes based on your ingredients
                 </h2>
             </div>
         </div>
+
+        <div class="buttons is-right">
+            <button class="button loggedIn" id="logoutButton"><i class="fas fa-sign-out-alt"></i>Log out</button>
+        </div>
     </section>
 
     <div class="notification is-success" id="notification">
-                
-    </div>
 
+    </div>
 
     <div id="loginWrapper" class="notLoggedIn formBox">
         <div class="box">
-             <div class="field">
+            <div class="field">
                 <label class="label">Username</label>
                 <div class="control has-icons-left has-icons-right">
-                    <input class="input" type="text" placeholder="Username">
+                    <input class="input" type="text" placeholder="Username" id="username">
                     <span class="icon is-small is-left">
                         <i class="fas fa-user"></i>
                     </span>
@@ -47,7 +51,7 @@
             <div class="field">
                 <label class="label">Password</label>
                 <div class="control has-icons-left has-icons-right">
-                    <input class="input" type="email" placeholder="Password">
+                    <input class="input" type="email" placeholder="Password" id="password">
                     <span class="icon is-small is-left">
                         <i class="fas fa-envelope"></i>
                     </span>
@@ -56,7 +60,7 @@
                     </span>
                 </div>
             </div>
-           
+
             <div class="field is-grouped">
                 <div class="control">
                     <button class="button is-link" id="loginButton">Log in</button>
@@ -66,14 +70,14 @@
                 </div>
             </div>
             <div class="notification is-danger" id="loginError">
-                
+
             </div>
         </div>
     </div>
 
     <div id="createAccountWrapper" class="notLoggedIn formBox">
         <div class="box">
-             <div class="field">
+            <div class="field">
                 <label class="label">New Username</label>
                 <div class="control has-icons-left has-icons-right">
                     <input class="input" type="text" placeholder="Username" id="newUsername">
@@ -98,7 +102,7 @@
                     </span>
                 </div>
             </div>
-           
+
             <div class="field is-grouped">
                 <div class="control">
                     <button class="button is-link" id="CreateAccountButton">Create account and log in</button>
@@ -108,7 +112,7 @@
                 </div>
             </div>
             <div class="notification is-danger" id="createAccountError">
-                
+
             </div>
         </div>
     </div>
@@ -118,12 +122,12 @@
 
     <footer class="footer" class="loggedIn notLoggedIn">
         <div class="content has-text-centered">
-          <p>
-            <strong>Boozr</strong> by <a href="https://jersoe.com">Jeroen S.</a>. The source code is licensed
-            <a href="http://opensource.org/licenses/mit-license.php">MIT</a>. 
-          </p>
+            <p>
+                <strong>Boozr</strong> by <a href="https://jersoe.com">Jeroen S.</a>. The source code is licensed
+                <a href="http://opensource.org/licenses/mit-license.php">MIT</a>.
+            </p>
         </div>
-      </footer>
+    </footer>
 
 </body>
 

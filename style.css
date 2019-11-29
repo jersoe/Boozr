@@ -19,3 +19,9 @@ body {
 body > footer {
     margin-top: auto;
 }
+
+#logoutButton{
+    position: absolute;
+    top:30px;
+    right:10%;
+}
