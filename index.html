@@ -9,6 +9,7 @@
     <script src="node_modules/axios/dist/axios.min.js"></script>
     <script src="view.js"></script>
     <script src="controller.js"></script>
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
 </head>
 
 <body>
@@ -16,7 +17,7 @@
         <div class="hero-body">
             <div class="container">
                 <h1 class="title">
-                        <i class="fas fa-cocktail"></i> Boozr
+                    <i class="fas fa-cocktail"></i> Boozr
                 </h1>
                 <h2 class="subtitle">
                     Cocktail recipes based on your ingredients
@@ -37,26 +38,20 @@
         <div class="box">
             <div class="field">
                 <label class="label">Username</label>
-                <div class="control has-icons-left has-icons-right">
+                <div class="control has-icons-left">
                     <input class="input" type="text" placeholder="Username" id="username">
                     <span class="icon is-small is-left">
                         <i class="fas fa-user"></i>
-                    </span>
-                    <span class="icon is-small is-right">
-                        <i class="fas fa-check"></i>
                     </span>
                 </div>
             </div>
 
             <div class="field">
                 <label class="label">Password</label>
-                <div class="control has-icons-left has-icons-right">
-                    <input class="input" type="email" placeholder="Password" id="password">
+                <div class="control has-icons-left">
+                    <input class="input" type="password" placeholder="Password" id="password">
                     <span class="icon is-small is-left">
-                        <i class="fas fa-envelope"></i>
-                    </span>
-                    <span class="icon is-small is-right">
-                        <i class="fas fa-exclamation-triangle"></i>
+                        <i class="fas fa-unlock-alt"></i>
                     </span>
                 </div>
             </div>
@@ -79,26 +74,20 @@
         <div class="box">
             <div class="field">
                 <label class="label">New Username</label>
-                <div class="control has-icons-left has-icons-right">
+                <div class="control has-icons-left">
                     <input class="input" type="text" placeholder="Username" id="newUsername">
                     <span class="icon is-small is-left">
-                        <i class="fas fa-user"></i>
-                    </span>
-                    <span class="icon is-small is-right">
-                        <i class="fas fa-check"></i>
-                    </span>
+                            <i class="fas fa-user"></i>
+                        </span>
                 </div>
             </div>
 
             <div class="field">
                 <label class="label">New Password</label>
-                <div class="control has-icons-left has-icons-right">
-                    <input class="input" type="email" placeholder="Password" id="newPassword">
+                <div class="control has-icons-left">
+                    <input class="input" type="password" placeholder="Password" id="newPassword">
                     <span class="icon is-small is-left">
-                        <i class="fas fa-envelope"></i>
-                    </span>
-                    <span class="icon is-small is-right">
-                        <i class="fas fa-exclamation-triangle"></i>
+                            <i class="fas fa-unlock-alt"></i>
                     </span>
                 </div>
             </div>
@@ -117,14 +106,38 @@
         </div>
     </div>
 
-
+    <section class="section" id="dashboard">
+        <div class="container">
+            <div class="content">
+                <div class="dashboard-grid rotate">
+                    <div class="dashboard-item">
+                        <i class="fas fa-wine-bottle fa-6x"></i>
+                        <h3>My ingredients</h3>
+                        <p>What do you have available?</p>
+                    </div>
+                    <div class="dashboard-item">
+                        <i class="fas fa-glass-martini-alt fa-6x"></i>
+                        <h3>Recipe search</h3>
+                        <p>What can you make?</p>
+                    </div>
+                    <div class="dashboard-item">
+                            <i class="fas fa-glass-cheers fa-6x"></i>
+                            <h3>Favorites</h3>
+                            <p>You like this!</p>
+                        </div>                    
+                </div>
+            </div>
+        </div>
+    </section>
 
 
     <footer class="footer" class="loggedIn notLoggedIn">
         <div class="content has-text-centered">
             <p>
                 <strong>Boozr</strong> by <a href="https://jersoe.com">Jeroen S.</a>. The source code is licensed
-                <a href="http://opensource.org/licenses/mit-license.php">MIT</a>.
+                <a href="http://opensource.org/licenses/mit-license.php">MIT</a>.<br>
+                <a class="github-button" href="https://github.com/jersoe" aria-label="Follow @jersoe on GitHub">Follow
+                    @jersoe</a>
             </p>
         </div>
     </footer>

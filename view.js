@@ -13,12 +13,22 @@ class View {
         /*Hide error message div*/
         $("#loginError").hide();
         $("#createAccountError").hide();
+
+        this.hideDashboard();
     }
 
     showLoggedIn(){
-        console.log("Showing logged in");
         $(".loggedIn").show();
         $(".notLoggedIn").hide();
+        this.showDashboard();
+    }
+
+    showDashboard(){
+        $("#dashboard").show();
+    }
+
+    hideDashboard(){
+        $("#dashboard").hide();
     }
 
     showCreateNewAccount(){

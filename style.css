@@ -25,3 +25,40 @@ body > footer {
     top:30px;
     right:10%;
 }
+
+.dashboard-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.dashboard-item {
+    flex-basis: 250px;
+    background-color: #fff;
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    margin: 1em;
+    box-shadow: 0 1px 3px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.24);
+    cursor: pointer;
+    color: #363636;
+    text-align: center
+}
+
+.rotate div{
+    transition: .3s ease;
+    }
+    
+.rotate div:hover{
+    -webkit-transform: rotateZ(-10deg);
+    -ms-transform: rotateZ(-10deg);
+    transform: rotateZ(-30deg);
+    transition: .3s ease;
+    }
+
+    #myVideo {
+        position: relative;
+        right: 0;
+        bottom: 0;
+width:100%;
+      }
