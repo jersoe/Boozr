@@ -178,8 +178,8 @@ class View {
         $("#searchResultsGrid").empty();
     }
 
-    showRecipeModal(recipe) {
-
+    showRecipeModal(recipe, isLiked) {
+console.log(recipe);
         let html = `
             <div class="card"><br>
             <div class="card-image">
@@ -188,10 +188,14 @@ class View {
                 </figure>
             </div>
             <div class="card-content">
-                <div class="media">
-                
+                <div class="media">            
                 <div class="media-content">
-                    <p class="title is-4">${recipe.strDrink}</p>
+                    <p class="title is-4">
+                        <a id="liked${recipe.idDrink}" class="likeLink">
+                            ${isLiked ? `<i class="fas fa-thumbs-up"></i>` : `<i class="far fa-thumbs-up"></i>`}
+                        </a>
+                        ${recipe.strDrink}
+                    </p>
                     <p class="subtitle is-6">${recipe.strAlcoholic} - ${recipe.strCategory} - ${recipe.strGlass}</p>
                 </div>
                 </div>
@@ -248,7 +252,9 @@ class View {
 
                 </div>
             </div>
+            
             </div>
+            
 
 `;
 
@@ -256,8 +262,7 @@ class View {
         $("#searchModalContent").append(html);
 
         $("#searchModal").addClass("is-active");
-        console.log(recipe);
-
+       
     }
 
     closeModal() {

@@ -212,6 +212,7 @@ class Controller {
     }
 
     doLogin = async function () {
+        this.ingredients = [];
         let username = $("#username").val();
         let password = $("#password").val();
 
@@ -332,7 +333,7 @@ class Controller {
                     url: 'https://www.thecocktaildb.com/api/json/v2/9973533/filter.php?i=' + ingredientList
                 });
 
-                if (response.data.drinks=="None Found") {
+                if (response.data.drinks == "None Found") {
                     this.view.showNotification("There are no cocktails that contain all selected ingredients!");
                 } else {
                     response.data.drinks.map((cocktail) => { this.view.showSearchResult(cocktail) });
@@ -363,7 +364,68 @@ class Controller {
         }
     }
 
-    getRecipeDetails = async function(recipeId){
+    isRecipeLiked = async function (recipeId) {
+        try {
+            const response = await axios({
+                method: 'GET',
+                url: 'http://localhost:3000/user/' + localStorage.getItem('username') + '/recipes/' + recipeId,
+                headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') },
+            });
+            return response.data.result.liked;
+        } catch (error) {
+            // Error 😨
+            if (error.response) {
+                /*No entry, so this recipe is definately not liked */
+                return false;
+
+            } else if (error.request) {
+                /*
+                 * The request was made but no response was received, `error.request`
+                 * is an instance of XMLHttpRequest in the browser and an instance
+                 * of http.ClientRequest in Node.js
+                 */
+                console.log(error.request);
+                return false;
+            } else {
+                // Something happened in setting up the request and triggered an Error
+                console.log('Error', error.message);
+                return false;
+            }
+        }
+    }
+
+    likeRecipe = async function (recipeId) {
+        try {
+            const response = await axios({
+                method: 'POST',
+                url: 'http://localhost:3000/user/' + localStorage.getItem('username') + '/recipes/' + recipeId,
+                headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') },
+                data: {
+                    data: {"liked": true},
+                }
+            });
+            console.log(response);
+        } catch (error) {
+            // Error 😨
+            if (error.response) {
+                /*No entry, so this recipe is definately not liked */
+                console.log(error.response);
+
+            } else if (error.request) {
+                /*
+                 * The request was made but no response was received, `error.request`
+                 * is an instance of XMLHttpRequest in the browser and an instance
+                 * of http.ClientRequest in Node.js
+                 */
+                console.log(error.request);
+            } else {
+                // Something happened in setting up the request and triggered an Error
+                console.log('Error', error.message);
+            }
+        }
+    }
+
+    getRecipeDetails = async function (recipeId) {
         //https://www.thecocktaildb.com/api/json/v2/9973533/lookup.php?i=15182
         try {
             const response = await axios({
@@ -371,7 +433,10 @@ class Controller {
                 url: 'https://www.thecocktaildb.com/api/json/v2/9973533/lookup.php?i=' + recipeId
             });
 
-            this.view.showRecipeModal(response.data.drinks[0]);
+            //Check if this recipe is liked
+            let isLiked=await this.isRecipeLiked(response.data.drinks[0].idDrink);
+            
+            this.view.showRecipeModal(response.data.drinks[0],isLiked);
 
         } catch (error) {
             // Error 😨
@@ -421,7 +486,8 @@ $(document).ready(function () {
     $(document).on("click", ".ingredientCheckbox", (checkbox) => { controller.doSearch(); });
     $(document).on("click", "#closeModal", () => { view.closeModal(); });
     $(document).on("click", ".searchResult", (cocktail) => { controller.getRecipeDetails(cocktail.currentTarget.id.substring(12)); });
-    $(document).on("click", ".modal-background", () => { view.closeModal(); });    
+    $(document).on("click", ".modal-background", () => { view.closeModal(); });
+    $(document).on("click", ".likeLink", (recipe) => { controller.likeRecipe(recipe.currentTarget.id.substring(5)); });
 
     controller.getLoginStatus();
 

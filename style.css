@@ -109,7 +109,7 @@ body > footer {
 .rotate div:hover{
     -webkit-transform: rotateZ(-10deg);
     -ms-transform: rotateZ(-10deg);
-    transform: rotateZ(-360deg);
+    transform: rotateZ(-10deg);
     transition: .3s ease;
     }
 
