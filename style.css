@@ -44,6 +44,25 @@ body > footer {
     justify-content: center;
 }
 
+.searchresults-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.searchResult {
+    flex-basis: 200px;
+    background-color: #fff;
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    margin: 1em;
+    box-shadow: 0 1px 3px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.24);
+    cursor: pointer;
+    color: #363636;
+    text-align: center
+}
+
 .suggestedIngredient {
     flex-basis: 50px;
     background-color: #fff;

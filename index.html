@@ -75,8 +75,19 @@
 
     <div id="createAccountWrapper" class="notLoggedIn formBox">
         <div class="box">
+
             <div class="field">
-                <label class="label">New Username</label>
+                <label class="label">First name</label>
+                <div class="control has-icons-left">
+                    <input class="input" type="text" placeholder="First name" id="newFirstname">
+                    <span class="icon is-small is-left">
+                        <i class="fas fa-user"></i>
+                    </span>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Username</label>
                 <div class="control has-icons-left">
                     <input class="input" type="text" placeholder="Username" id="newUsername">
                     <span class="icon is-small is-left">
@@ -86,7 +97,7 @@
             </div>
 
             <div class="field">
-                <label class="label">New Password</label>
+                <label class="label">Password</label>
                 <div class="control has-icons-left">
                     <input class="input" type="password" placeholder="Password" id="newPassword">
                     <span class="icon is-small is-left">
@@ -157,7 +168,7 @@
                 </div>
 
                 <div class="ingredients-grid" id="ingredientsGrid">
-                    
+
                 </div>
             </div>
         </div>
@@ -167,6 +178,23 @@
         <div class="container">
             <div class="content">
                 <h1>Recipe search</h1>
+                <div id="ingredientsForSearch">
+
+                </div>
+
+                <div class="searchresults-grid" id="searchResultsGrid">
+
+                </div>
+
+                <div class="modal" id="searchModal">
+                        <div class="modal-background"></div>
+                        <div class="modal-content" id="searchModalContent">
+                          <!-- Any other Bulma elements you want -->
+                        </div>
+                        <button class="modal-close is-large" aria-label="close" id="closeModal"></button>
+                      </div>
+
+
             </div>
         </div>
     </section>

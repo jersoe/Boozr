@@ -13,9 +13,10 @@ class Controller {
     getMyIngredients = async function () {
         //Retrieve my ingredients
         try {
+
             const response = await axios({
                 method: 'GET',
-                url: 'http://localhost:3000/private/'+localStorage.getItem('username')+'/ingredients',
+                url: 'http://localhost:3000/user/' + localStorage.getItem('username') + '/ingredients',
                 headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') },
 
             });
@@ -136,6 +137,7 @@ class Controller {
                 headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
             });
             this.view.showLoggedIn();
+
         } catch (error) {
             // Error 😨
             if (error.response) {
@@ -165,9 +167,10 @@ class Controller {
     createNewAccount = async function () {
         let username = $("#newUsername").val();
         let password = $("#newPassword").val();
+        let firstname = $("#newFirstname").val();
 
-        if (username == "" || password == "") {
-            this.view.showCreateAccountError("Please enter a username and password!");
+        if (username == "" || password == "" || firstname == "") {
+            this.view.showCreateAccountError("Please enter a first name, username and password!");
         } else {
             try {
                 const response = await axios({
@@ -176,6 +179,9 @@ class Controller {
                     data: {
                         "name": username,
                         "pass": password,
+                        "data": {
+                            "firstname": firstname
+                        }
                     }
                 });
 
@@ -225,7 +231,7 @@ class Controller {
                 this.view.showNotification("Succesfully logged in!");
                 this.storage.setItem('jwt', response.data.jwt);
                 this.storage.setItem('username', response.data.name);
-                this.username=response.data.name;
+                this.getMyIngredients();
                 this.view.showLoggedIn();
             } catch (error) {
                 // Error 😨
@@ -272,7 +278,7 @@ class Controller {
 
             const response = await axios({
                 method: 'POST',
-                url: 'http://localhost:3000/private/'+localStorage.getItem('username')+'/ingredients',
+                url: 'http://localhost:3000/user/' + localStorage.getItem('username') + '/ingredients',
                 headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') },
                 data: {
                     "data": this.ingredients
@@ -293,18 +299,104 @@ class Controller {
 
         const response = await axios({
             method: 'POST',
-            url: 'http://localhost:3000/private/'+localStorage.getItem('username')+'/ingredients',
+            url: 'http://localhost:3000/user/' + localStorage.getItem('username') + '/ingredients',
             headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') },
             data: {
                 "data": this.ingredients
             }
         });
-        
+
         if (response.status = "200") {
             this.view.showNotification("Ingredient deleted!");
             this.view.removeIngredient(id);
         }
     }
+
+    doSearch = async function () {
+        let ingredientList = "";
+
+        $("#ingredientsForSearch")[0].childNodes.forEach((item) => {
+            if (item.checked != undefined && item.checked == true) {
+                if (ingredientList.length > 0) {
+                    ingredientList += ",";
+                }
+                ingredientList += "" + item.value;
+            }
+        });
+        ingredientList = ingredientList.replace(/\s+/g, '_');
+        this.view.clearSearchResults();
+        if (ingredientList.length > 0) {
+            try {
+                const response = await axios({
+                    method: 'get',
+                    url: 'https://www.thecocktaildb.com/api/json/v2/9973533/filter.php?i=' + ingredientList
+                });
+
+                if (response.data.drinks=="None Found") {
+                    this.view.showNotification("There are no cocktails that contain all selected ingredients!");
+                } else {
+                    response.data.drinks.map((cocktail) => { this.view.showSearchResult(cocktail) });
+                }
+
+            } catch (error) {
+                // Error 😨
+                if (error.response) {
+                    /*
+                     * The request was made and the server responded with a
+                     * status code that falls out of the range of 2xx
+                     */
+
+                    console.log(error.response);
+
+                } else if (error.request) {
+                    /*
+                     * The request was made but no response was received, `error.request`
+                     * is an instance of XMLHttpRequest in the browser and an instance
+                     * of http.ClientRequest in Node.js
+                     */
+                    console.log(error.request);
+                } else {
+                    // Something happened in setting up the request and triggered an Error
+                    console.log('Error', error.message);
+                }
+            }
+        }
+    }
+
+    getRecipeDetails = async function(recipeId){
+        //https://www.thecocktaildb.com/api/json/v2/9973533/lookup.php?i=15182
+        try {
+            const response = await axios({
+                method: 'get',
+                url: 'https://www.thecocktaildb.com/api/json/v2/9973533/lookup.php?i=' + recipeId
+            });
+
+            this.view.showRecipeModal(response.data.drinks[0]);
+
+        } catch (error) {
+            // Error 😨
+            if (error.response) {
+                /*
+                 * The request was made and the server responded with a
+                 * status code that falls out of the range of 2xx
+                 */
+
+                console.log(error.response);
+
+            } else if (error.request) {
+                /*
+                 * The request was made but no response was received, `error.request`
+                 * is an instance of XMLHttpRequest in the browser and an instance
+                 * of http.ClientRequest in Node.js
+                 */
+                console.log(error.request);
+            } else {
+                // Something happened in setting up the request and triggered an Error
+                console.log('Error', error.message);
+            }
+        }
+    }
+
 }
 
 
@@ -319,12 +411,17 @@ $(document).ready(function () {
     $(document).on("click", "#CreateAccountButton", () => { controller.createNewAccount(); });
     $(document).on("click", "#logoutButton", () => { controller.doLogout(); });
     $(document).on("click", "#myIngredientsTile", () => { view.showMyIngredients(); });
-    $(document).on("click", "#recipeSearchTile", () => { view.showRecipeSearch(); });
+    $(document).on("click", "#recipeSearchTile", () => { view.showRecipeSearch(); view.listIngredientsForSearch(controller.ingredients); });
     $(document).on("click", "#myFavoritesTile", () => { view.showMyFavorites(); });
     $(document).on("click", "#backToDashboard", () => { view.showDashboard(); });
     $(document).on("keyup", "#ingredientSearch", (change) => { controller.findIngredientSuggestion(change.currentTarget.value); });
     $(document).on("click", ".suggestedIngredient", (button) => { controller.storeNewIngredient(button.currentTarget.id.substring(13), $("#" + button.currentTarget.id).html()); });
     $(document).on("click", ".delete", (button) => { controller.deleteIngredient(button.currentTarget.id.substring(16)); });
+    //$(document).on("click", ".ingredientCheckbox", (checkbox) => { controller.doSearch($("#" + checkbox.currentTarget.id)[0].labels[0].innerText,$("#" + checkbox.currentTarget.id)[0].checked);});
+    $(document).on("click", ".ingredientCheckbox", (checkbox) => { controller.doSearch(); });
+    $(document).on("click", "#closeModal", () => { view.closeModal(); });
+    $(document).on("click", ".searchResult", (cocktail) => { controller.getRecipeDetails(cocktail.currentTarget.id.substring(12)); });
+    $(document).on("click", ".modal-background", () => { view.closeModal(); });    
 
     controller.getLoginStatus();
 
