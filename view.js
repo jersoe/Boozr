@@ -179,7 +179,6 @@ class View {
     }
 
     showRecipeModal(recipe, isLiked) {
-console.log(recipe);
         let html = `
             <div class="card"><br>
             <div class="card-image">
@@ -268,6 +267,16 @@ console.log(recipe);
     closeModal() {
         $("#searchModal").removeClass("is-active");
         $("#searchModalContent").empty();
+    }
+
+    setToLiked(id){
+        $("#liked"+id).empty();
+        $("#liked"+id).append(`<i class="fas fa-thumbs-up"></i>`);
+    }
+
+    setToNotLiked(id){
+        $("#liked"+id).empty();
+        $("#liked"+id).append(`<i class="far fa-thumbs-up"></i>`);
     }
 
 }

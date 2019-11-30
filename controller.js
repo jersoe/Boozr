@@ -371,6 +371,7 @@ class Controller {
                 url: 'http://localhost:3000/user/' + localStorage.getItem('username') + '/recipes/' + recipeId,
                 headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') },
             });
+            console.log(response.data.result.liked);
             return response.data.result.liked;
         } catch (error) {
             // Error 😨
@@ -395,16 +396,48 @@ class Controller {
     }
 
     likeRecipe = async function (recipeId) {
+        console.log("entered like");
         try {
             const response = await axios({
                 method: 'POST',
                 url: 'http://localhost:3000/user/' + localStorage.getItem('username') + '/recipes/' + recipeId,
                 headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') },
                 data: {
-                    data: {"liked": true},
+                    data: { "liked": true },
                 }
             });
-            console.log(response);
+            this.view.setToLiked(recipeId);
+        } catch (error) {
+            // Error 😨
+            if (error.response) {
+                /*No entry, so this recipe is definately not liked */
+                console.log(error.response);
+
+            } else if (error.request) {
+                /*
+                 * The request was made but no response was received, `error.request`
+                 * is an instance of XMLHttpRequest in the browser and an instance
+                 * of http.ClientRequest in Node.js
+                 */
+                console.log(error.request);
+            } else {
+                // Something happened in setting up the request and triggered an Error
+                console.log('Error', error.message);
+            }
+        }
+    }
+
+    unlikeRecipe = async function (recipeId) {
+        try {
+            const response = await axios({
+                method: 'POST',
+                url: 'http://localhost:3000/user/' + localStorage.getItem('username') + '/recipes/' + recipeId,
+                headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') },
+                data: {
+                    data: { "liked": false },
+                }
+            });
+            this.view.setToNotLiked(recipeId);
         } catch (error) {
             // Error 😨
             if (error.response) {
@@ -434,9 +467,9 @@ class Controller {
             });
 
             //Check if this recipe is liked
-            let isLiked=await this.isRecipeLiked(response.data.drinks[0].idDrink);
-            
-            this.view.showRecipeModal(response.data.drinks[0],isLiked);
+            let isLiked = await this.isRecipeLiked(response.data.drinks[0].idDrink);
+
+            this.view.showRecipeModal(response.data.drinks[0], isLiked);
 
         } catch (error) {
             // Error 😨
@@ -446,6 +479,37 @@ class Controller {
                  * status code that falls out of the range of 2xx
                  */
 
+                console.log(error.response);
+
+            } else if (error.request) {
+                /*
+                 * The request was made but no response was received, `error.request`
+                 * is an instance of XMLHttpRequest in the browser and an instance
+                 * of http.ClientRequest in Node.js
+                 */
+                console.log(error.request);
+            } else {
+                // Something happened in setting up the request and triggered an Error
+                console.log('Error', error.message);
+            }
+        }
+    }
+
+    getAllLikedRecipes = async function(){
+        try {
+            const response = await axios({
+                method: 'GET',
+                url: 'http://localhost:3000/user/' + localStorage.getItem('username') + '/recipes/',
+                headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') },
+            });
+            console.log(response.data.result);
+
+            
+
+        } catch (error) {
+            // Error 😨
+            if (error.response) {
+                /*No entry, so this recipe is definately not liked */
                 console.log(error.response);
 
             } else if (error.request) {
@@ -477,17 +541,16 @@ $(document).ready(function () {
     $(document).on("click", "#logoutButton", () => { controller.doLogout(); });
     $(document).on("click", "#myIngredientsTile", () => { view.showMyIngredients(); });
     $(document).on("click", "#recipeSearchTile", () => { view.showRecipeSearch(); view.listIngredientsForSearch(controller.ingredients); });
-    $(document).on("click", "#myFavoritesTile", () => { view.showMyFavorites(); });
+    $(document).on("click", "#myFavoritesTile", () => { view.showMyFavorites(controller.getAllLikedRecipes()); });
     $(document).on("click", "#backToDashboard", () => { view.showDashboard(); });
     $(document).on("keyup", "#ingredientSearch", (change) => { controller.findIngredientSuggestion(change.currentTarget.value); });
     $(document).on("click", ".suggestedIngredient", (button) => { controller.storeNewIngredient(button.currentTarget.id.substring(13), $("#" + button.currentTarget.id).html()); });
     $(document).on("click", ".delete", (button) => { controller.deleteIngredient(button.currentTarget.id.substring(16)); });
-    //$(document).on("click", ".ingredientCheckbox", (checkbox) => { controller.doSearch($("#" + checkbox.currentTarget.id)[0].labels[0].innerText,$("#" + checkbox.currentTarget.id)[0].checked);});
     $(document).on("click", ".ingredientCheckbox", (checkbox) => { controller.doSearch(); });
     $(document).on("click", "#closeModal", () => { view.closeModal(); });
     $(document).on("click", ".searchResult", (cocktail) => { controller.getRecipeDetails(cocktail.currentTarget.id.substring(12)); });
     $(document).on("click", ".modal-background", () => { view.closeModal(); });
-    $(document).on("click", ".likeLink", (recipe) => { controller.likeRecipe(recipe.currentTarget.id.substring(5)); });
+    $(document).on("click", ".likeLink", async (recipe) => { if (await controller.isRecipeLiked(recipe.currentTarget.id.substring(5))) { controller.unlikeRecipe(recipe.currentTarget.id.substring(5)) } else { controller.likeRecipe(recipe.currentTarget.id.substring(5)); } });
 
     controller.getLoginStatus();
 
