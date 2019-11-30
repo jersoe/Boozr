@@ -126,8 +126,7 @@ class View {
 
 
     showAnIngredient = function(id, name){
-        console.log("Hello");
-
+        
        let html = `<div class="ingredient-item" id="ingredientItem${id}">
                    <article class="media">
                             <figure class="media-left">
@@ -151,6 +150,10 @@ class View {
         
         $("#ingredientsGrid").append(html);
 
+    }
+
+    removeIngredient = function(id){
+        $("#ingredientItem"+id).remove();
     }
 
 }

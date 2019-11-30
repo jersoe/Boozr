@@ -90,6 +90,12 @@ body > footer {
 .rotate div:hover{
     -webkit-transform: rotateZ(-10deg);
     -ms-transform: rotateZ(-10deg);
-    transform: rotateZ(-30deg);
+    transform: rotateZ(-360deg);
     transition: .3s ease;
+    }
+
+    .notificationFloat {
+        position: absolute;
+        z-index: 1;
+        top:153px;
     }
