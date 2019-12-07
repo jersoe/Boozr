@@ -6,6 +6,20 @@ class View {
         this.hideMyFavorites();
     }
 
+    resetAll() {
+        this.clearIngredients;
+        this.clearSearch;
+        this.clearSearchResults;
+        this.clearSuggestions;
+        $("#ingredientsGrid").val("");
+        $("#username").val("");
+        $("#password").val("");
+        $("#newFirstname").val("");
+        $("#newUsername").val("");
+        $("#newPassword").val("");
+        
+    }
+
     showNotLoggedIn() {
         $(".loggedIn").hide();
         $(".notLoggedIn").show();
@@ -61,6 +75,7 @@ class View {
         this.hideRecipeSearch();
         this.hideMyIngredients();
         this.showBackToDashboard();
+        $("#favoritesGrid").empty();
         $("#myFavorites").show();
     }
 
@@ -90,6 +105,7 @@ class View {
     }
 
     showCreateNewAccount() {
+        this.resetAll();
         $("#createAccountWrapper").show();
         $("#loginWrapper").hide();
     }
@@ -190,7 +206,7 @@ class View {
                 <div class="media">            
                 <div class="media-content">
                     <p class="title is-4">
-                        <a id="liked${recipe.idDrink}" class="likeLink">
+                        <a id="liked${recipe.idDrink}" class="likeLink" name="${recipe.strDrink}">
                             ${isLiked ? `<i class="fas fa-thumbs-up"></i>` : `<i class="far fa-thumbs-up"></i>`}
                         </a>
                         ${recipe.strDrink}
@@ -199,53 +215,53 @@ class View {
                 </div>
                 </div>
                 <ul>`;
-                if (recipe.strIngredient1!=null) {
-                    html+=`<li>${recipe.strIngredient1} - ${recipe.strMeasure1}</li>`
-                }
-                if (recipe.strIngredient2!=null) {
-                    html+=`<li>${recipe.strIngredient2} - ${recipe.strMeasure2}</li>`
-                }
-                if (recipe.strIngredient3!=null) {
-                    html+=`<li>${recipe.strIngredient3} - ${recipe.strMeasure3}</li>`
-                }                
-                if (recipe.strIngredient4!=null) {
-                    html+=`<li>${recipe.strIngredient4} - ${recipe.strMeasure4}</li>`
-                }  
-                if (recipe.strIngredient5!=null) {
-                    html+=`<li>${recipe.strIngredient5} - ${recipe.strMeasure5}</li>`
-                }  
-                if (recipe.strIngredient6!=null) {
-                    html+=`<li>${recipe.strIngredient6} - ${recipe.strMeasure6}</li>`
-                }  
-                if (recipe.strIngredient7!=null) {
-                    html+=`<li>${recipe.strIngredient7} - ${recipe.strMeasure7}</li>`
-                }  
-                if (recipe.strIngredient8!=null) {
-                    html+=`<li>${recipe.strIngredient8} - ${recipe.strMeasure8}</li>`
-                }  
-                if (recipe.strIngredient9!=null) {
-                    html+=`<li>${recipe.strIngredient9} - ${recipe.strMeasure9}</li>`
-                }  
-                if (recipe.strIngredient10!=null) {
-                    html+=`<li>${recipe.strIngredient10} - ${recipe.strMeasure10}</li>`
-                }  
-                if (recipe.strIngredient11!=null) {
-                    html+=`<li>${recipe.strIngredient11} - ${recipe.strMeasure11}</li>`
-                }  
-                if (recipe.strIngredient12!=null) {
-                    html+=`<li>${recipe.strIngredient12} - ${recipe.strMeasure12}</li>`
-                }  
-                if (recipe.strIngredient13!=null) {
-                    html+=`<li>${recipe.strIngredient13} - ${recipe.strMeasure13}</li>`
-                }  
-                if (recipe.strIngredient14!=null) {
-                    html+=`<li>${recipe.strIngredient14} - ${recipe.strMeasure14}</li>`
-                }  
-                if (recipe.strIngredient15!=null) {
-                    html+=`<li>${recipe.strIngredient15} - ${recipe.strMeasure15}</li>`
-                }  
+        if (recipe.strIngredient1 != null) {
+            html += `<li>${recipe.strIngredient1} - ${recipe.strMeasure1}</li>`
+        }
+        if (recipe.strIngredient2 != null) {
+            html += `<li>${recipe.strIngredient2} - ${recipe.strMeasure2}</li>`
+        }
+        if (recipe.strIngredient3 != null) {
+            html += `<li>${recipe.strIngredient3} - ${recipe.strMeasure3}</li>`
+        }
+        if (recipe.strIngredient4 != null) {
+            html += `<li>${recipe.strIngredient4} - ${recipe.strMeasure4}</li>`
+        }
+        if (recipe.strIngredient5 != null) {
+            html += `<li>${recipe.strIngredient5} - ${recipe.strMeasure5}</li>`
+        }
+        if (recipe.strIngredient6 != null) {
+            html += `<li>${recipe.strIngredient6} - ${recipe.strMeasure6}</li>`
+        }
+        if (recipe.strIngredient7 != null) {
+            html += `<li>${recipe.strIngredient7} - ${recipe.strMeasure7}</li>`
+        }
+        if (recipe.strIngredient8 != null) {
+            html += `<li>${recipe.strIngredient8} - ${recipe.strMeasure8}</li>`
+        }
+        if (recipe.strIngredient9 != null) {
+            html += `<li>${recipe.strIngredient9} - ${recipe.strMeasure9}</li>`
+        }
+        if (recipe.strIngredient10 != null) {
+            html += `<li>${recipe.strIngredient10} - ${recipe.strMeasure10}</li>`
+        }
+        if (recipe.strIngredient11 != null) {
+            html += `<li>${recipe.strIngredient11} - ${recipe.strMeasure11}</li>`
+        }
+        if (recipe.strIngredient12 != null) {
+            html += `<li>${recipe.strIngredient12} - ${recipe.strMeasure12}</li>`
+        }
+        if (recipe.strIngredient13 != null) {
+            html += `<li>${recipe.strIngredient13} - ${recipe.strMeasure13}</li>`
+        }
+        if (recipe.strIngredient14 != null) {
+            html += `<li>${recipe.strIngredient14} - ${recipe.strMeasure14}</li>`
+        }
+        if (recipe.strIngredient15 != null) {
+            html += `<li>${recipe.strIngredient15} - ${recipe.strMeasure15}</li>`
+        }
 
-          html+=`</ul><div class="content">
+        html += `</ul><div class="content">
                 ${recipe.strInstructions}
                 <br>
 
@@ -261,22 +277,132 @@ class View {
         $("#searchModalContent").append(html);
 
         $("#searchModal").addClass("is-active");
-       
+
     }
 
     closeModal() {
         $("#searchModal").removeClass("is-active");
+        $("#favoritesModal").removeClass("is-active");
+        $("#favoritesModalContent").empty();
         $("#searchModalContent").empty();
     }
 
-    setToLiked(id){
-        $("#liked"+id).empty();
-        $("#liked"+id).append(`<i class="fas fa-thumbs-up"></i>`);
+    setToLiked(id) {
+        $("#liked" + id).empty();
+        $("#liked" + id).append(`<i class="fas fa-thumbs-up"></i>`);
     }
 
-    setToNotLiked(id){
-        $("#liked"+id).empty();
-        $("#liked"+id).append(`<i class="far fa-thumbs-up"></i>`);
+    setToNotLiked(id) {
+        $("#liked" + id).empty();
+        $("#liked" + id).append(`<i class="far fa-thumbs-up"></i>`);
+    }
+
+    showFunFact(funfact) {
+        $("#funfact").empty();
+        $("#funfact").append(`<p class="funFactTitle">Fun fact:</p><p>` + funfact + `</p><p class="funfactSource">Src: https://www.adtbreathalysers.com.au/fun-facts-alcohol/</p>`);
+    }
+
+    showLikedCocktail(cocktail) {
+        let html = `<div class="likedCocktail" id="likedCocktail${cocktail.idDrink}">
+                        <img class="" src="${cocktail.strDrinkThumb}">
+                            ${cocktail.strDrink}
+                            <button class="button deleteLiked" id="deleteLiked${cocktail.idDrink}">Delete</button>
+                    </div>`;
+        $("#favoritesGrid").append(html);
+    }
+
+    showRecipeModalLiked(recipe) {
+        let html = `
+            <div class="card"><br>
+            <div class="card-image">
+                <figure class="image is-4by3">
+                <img src="${recipe.strDrinkThumb}">
+                </figure>
+            </div>
+            <div class="card-content">
+                <div class="media">            
+                <div class="media-content">
+                    <p class="title is-4">
+
+                        ${recipe.strDrink}
+                    </p>
+                    <p class="subtitle is-6">${recipe.strAlcoholic} - ${recipe.strCategory} - ${recipe.strGlass}</p>
+                </div>
+                </div>
+                <ul>`;
+        if (recipe.strIngredient1 != null) {
+            html += `<li>${recipe.strIngredient1} - ${recipe.strMeasure1}</li>`
+        }
+        if (recipe.strIngredient2 != null) {
+            html += `<li>${recipe.strIngredient2} - ${recipe.strMeasure2}</li>`
+        }
+        if (recipe.strIngredient3 != null) {
+            html += `<li>${recipe.strIngredient3} - ${recipe.strMeasure3}</li>`
+        }
+        if (recipe.strIngredient4 != null) {
+            html += `<li>${recipe.strIngredient4} - ${recipe.strMeasure4}</li>`
+        }
+        if (recipe.strIngredient5 != null) {
+            html += `<li>${recipe.strIngredient5} - ${recipe.strMeasure5}</li>`
+        }
+        if (recipe.strIngredient6 != null) {
+            html += `<li>${recipe.strIngredient6} - ${recipe.strMeasure6}</li>`
+        }
+        if (recipe.strIngredient7 != null) {
+            html += `<li>${recipe.strIngredient7} - ${recipe.strMeasure7}</li>`
+        }
+        if (recipe.strIngredient8 != null) {
+            html += `<li>${recipe.strIngredient8} - ${recipe.strMeasure8}</li>`
+        }
+        if (recipe.strIngredient9 != null) {
+            html += `<li>${recipe.strIngredient9} - ${recipe.strMeasure9}</li>`
+        }
+        if (recipe.strIngredient10 != null) {
+            html += `<li>${recipe.strIngredient10} - ${recipe.strMeasure10}</li>`
+        }
+        if (recipe.strIngredient11 != null) {
+            html += `<li>${recipe.strIngredient11} - ${recipe.strMeasure11}</li>`
+        }
+        if (recipe.strIngredient12 != null) {
+            html += `<li>${recipe.strIngredient12} - ${recipe.strMeasure12}</li>`
+        }
+        if (recipe.strIngredient13 != null) {
+            html += `<li>${recipe.strIngredient13} - ${recipe.strMeasure13}</li>`
+        }
+        if (recipe.strIngredient14 != null) {
+            html += `<li>${recipe.strIngredient14} - ${recipe.strMeasure14}</li>`
+        }
+        if (recipe.strIngredient15 != null) {
+            html += `<li>${recipe.strIngredient15} - ${recipe.strMeasure15}</li>`
+        }
+
+        html += `</ul><div class="content">
+                ${recipe.strInstructions}
+                <br>
+                </div>
+            </div>
+            
+            </div>
+            
+
+`;
+
+
+        $("#favoritesModalContent").append(html);
+
+        $("#favoritesModal").addClass("is-active");
+
+    }
+
+    showNews(newsArray) {
+        $("#newsStream").empty();
+        let html = "";
+
+        let lastTen = newsArray.slice(-5);
+
+        lastTen.map((item) => { html += `<p>${item}</p>` });
+
+        $("#newsStream").append(html);
     }
 
 }

@@ -7,10 +7,11 @@ class Controller {
 
     constructor(v) {
         this.view = v;
-        this.getMyIngredients();
+        this.getFunFact();
     }
 
     getMyIngredients = async function () {
+        
         //Retrieve my ingredients
         try {
 
@@ -79,6 +80,7 @@ class Controller {
     }
 
     findIngredientSuggestion = async function (input) {
+        //console.log("findIngredientSuggestion()");
         if (input == "") {
             this.view.clearSuggestions();
         }
@@ -136,6 +138,7 @@ class Controller {
                 url: 'http://localhost:3000/account/status',
                 headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
             });
+            this.getNews();
             this.view.showLoggedIn();
 
         } catch (error) {
@@ -186,6 +189,7 @@ class Controller {
                 });
 
                 this.view.showNotification(response.data.status);
+                this.view.resetAll();
                 this.view.showNotLoggedIn();
             } catch (error) {
                 // Error 😨
@@ -232,7 +236,9 @@ class Controller {
                 this.view.showNotification("Succesfully logged in!");
                 this.storage.setItem('jwt', response.data.jwt);
                 this.storage.setItem('username', response.data.name);
+                this.storage.setItem('firstname', response.data.data.firstname);
                 this.getMyIngredients();
+                this.getNews();
                 this.view.showLoggedIn();
             } catch (error) {
                 // Error 😨
@@ -259,10 +265,13 @@ class Controller {
     }
 
     doLogout = function () {
-        this.storage.removeItem('jwt');
-        this.storage.removeItem('username');
+        localStorage.removeItem('jwt');
+        localStorage.removeItem('username');
+        localStorage.removeItem('firstname');
+        this.view.resetAll();
         this.getLoginStatus();
         this.view.showNotification("Succesfully logged out!");
+        this.getFunFact();
     }
 
     storeNewIngredient = async function (id, name) {
@@ -371,7 +380,7 @@ class Controller {
                 url: 'http://localhost:3000/user/' + localStorage.getItem('username') + '/recipes/' + recipeId,
                 headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') },
             });
-            console.log(response.data.result.liked);
+            //console.log(response.data.result.liked);
             return response.data.result.liked;
         } catch (error) {
             // Error 😨
@@ -395,8 +404,8 @@ class Controller {
         }
     }
 
-    likeRecipe = async function (recipeId) {
-        console.log("entered like");
+    likeRecipe = async function (recipeId, name) {
+
         try {
             const response = await axios({
                 method: 'POST',
@@ -407,6 +416,36 @@ class Controller {
                 }
             });
             this.view.setToLiked(recipeId);
+        } catch (error) {
+            // Error 😨
+            if (error.response) {
+                /*No entry, so this recipe is definately not liked */
+                console.log(error.response);
+
+            } else if (error.request) {
+                /*
+                 * The request was made but no response was received, `error.request`
+                 * is an instance of XMLHttpRequest in the browser and an instance
+                 * of http.ClientRequest in Node.js
+                 */
+                console.log(error.request);
+            } else {
+                // Something happened in setting up the request and triggered an Error
+                console.log('Error', error.message);
+            }
+        }
+
+        try {
+            const response = await axios({
+                method: 'POST',
+                url: 'http://localhost:3000/private/newsstream',
+                headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') },
+                data: {
+                        "data": [localStorage.getItem('firstname')+" just liked cocktail "+name],
+                        "type": "merge"
+                }
+            });
+            
         } catch (error) {
             // Error 😨
             if (error.response) {
@@ -495,16 +534,154 @@ class Controller {
         }
     }
 
-    getAllLikedRecipes = async function(){
+    getAllLikedRecipes = async function () {
         try {
             const response = await axios({
                 method: 'GET',
                 url: 'http://localhost:3000/user/' + localStorage.getItem('username') + '/recipes/',
                 headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') },
             });
-            console.log(response.data.result);
+            response.data.result.map(async (recipeId) => {
+                if (await this.isRecipeLiked(recipeId)) {
 
-            
+                    const response2 = await axios({
+                        method: 'get',
+                        url: 'https://www.thecocktaildb.com/api/json/v2/9973533/lookup.php?i=' + recipeId
+                    });
+                    if (response2.data.drinks != null) {
+                        this.view.showLikedCocktail(response2.data.drinks[0]);
+                    }
+                }
+            });
+
+        } catch (error) {
+            // Error 😨
+            if (error.response) {
+                /*No entry, so this recipe is definately not liked */
+                console.log(error.response);
+
+            } else if (error.request) {
+                /*
+                 * The request was made but no response was received, `error.request`
+                 * is an instance of XMLHttpRequest in the browser and an instance
+                 * of http.ClientRequest in Node.js
+                 */
+                console.log(error.request);
+            } else {
+                // Something happened in setting up the request and triggered an Error
+                console.log('Error', error.message);
+            }
+        }
+    }
+
+    getFunFact = async function () {
+        try {
+            const response = await axios({
+                method: 'GET',
+                url: 'http://localhost:3000/public/funfacts/facts',
+            });
+            let funfact = response.data.result[Math.floor(Math.random() * response.data.result.length)];
+            this.view.showFunFact(funfact);
+
+        } catch (error) {
+            // Error 😨
+            if (error.response) {
+                /*No entry, so this recipe is definately not liked */
+                console.log(error.response);
+
+            } else if (error.request) {
+                /*
+                 * The request was made but no response was received, `error.request`
+                 * is an instance of XMLHttpRequest in the browser and an instance
+                 * of http.ClientRequest in Node.js
+                 */
+                console.log(error.request);
+            } else {
+                // Something happened in setting up the request and triggered an Error
+                console.log('Error', error.message);
+            }
+        }
+    }
+
+    getNews = async function () {
+        try {
+            const response = await axios({
+                method: 'GET',
+                url: 'http://localhost:3000/private/newsstream',
+                headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') },
+            });
+         this.view.showNews(response.data.result);
+
+        } catch (error) {
+            // Error 😨
+            if (error.response) {
+                /*No entry, so this recipe is definately not liked */
+                console.log(error.response);
+
+            } else if (error.request) {
+                /*
+                 * The request was made but no response was received, `error.request`
+                 * is an instance of XMLHttpRequest in the browser and an instance
+                 * of http.ClientRequest in Node.js
+                 */
+                console.log(error.request);
+            } else {
+                // Something happened in setting up the request and triggered an Error
+                console.log('Error', error.message);
+            }
+        }
+    }
+
+
+    getRecipeDetailsForLiked = async function (recipeId) {
+        //https://www.thecocktaildb.com/api/json/v2/9973533/lookup.php?i=15182
+        try {
+            const response = await axios({
+                method: 'get',
+                url: 'https://www.thecocktaildb.com/api/json/v2/9973533/lookup.php?i=' + recipeId
+            });
+
+            //Check if this recipe is liked
+            let isLiked = await this.isRecipeLiked(response.data.drinks[0].idDrink);
+
+            this.view.showRecipeModalLiked(response.data.drinks[0], isLiked);
+
+        } catch (error) {
+            // Error 😨
+            if (error.response) {
+                /*
+                 * The request was made and the server responded with a
+                 * status code that falls out of the range of 2xx
+                 */
+
+                console.log(error.response);
+
+            } else if (error.request) {
+                /*
+                 * The request was made but no response was received, `error.request`
+                 * is an instance of XMLHttpRequest in the browser and an instance
+                 * of http.ClientRequest in Node.js
+                 */
+                console.log(error.request);
+            } else {
+                // Something happened in setting up the request and triggered an Error
+                console.log('Error', error.message);
+            }
+        }
+    }
+
+
+    deleteLikedAndRefresh = async function (recipeId) {
+        try {
+            const response = await axios({
+                method: 'POST',
+                url: 'http://localhost:3000/user/' + localStorage.getItem('username') + '/recipes/' + recipeId,
+                headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') },
+                data: {
+                    data: { "liked": false },
+                }
+            });
+            this.view.showMyFavorites(this.getAllLikedRecipes());
 
         } catch (error) {
             // Error 😨
@@ -539,18 +716,20 @@ $(document).ready(function () {
     $(document).on("click", "#backToLoginButton", () => { view.showNotLoggedIn(); });
     $(document).on("click", "#CreateAccountButton", () => { controller.createNewAccount(); });
     $(document).on("click", "#logoutButton", () => { controller.doLogout(); });
-    $(document).on("click", "#myIngredientsTile", () => { view.showMyIngredients(); });
+    $(document).on("click", "#myIngredientsTile", () => { controller.getMyIngredients(); view.showMyIngredients(); });
     $(document).on("click", "#recipeSearchTile", () => { view.showRecipeSearch(); view.listIngredientsForSearch(controller.ingredients); });
     $(document).on("click", "#myFavoritesTile", () => { view.showMyFavorites(controller.getAllLikedRecipes()); });
-    $(document).on("click", "#backToDashboard", () => { view.showDashboard(); });
+    $(document).on("click", "#backToDashboard", () => { controller.getNews(); view.showDashboard(); });
     $(document).on("keyup", "#ingredientSearch", (change) => { controller.findIngredientSuggestion(change.currentTarget.value); });
     $(document).on("click", ".suggestedIngredient", (button) => { controller.storeNewIngredient(button.currentTarget.id.substring(13), $("#" + button.currentTarget.id).html()); });
     $(document).on("click", ".delete", (button) => { controller.deleteIngredient(button.currentTarget.id.substring(16)); });
     $(document).on("click", ".ingredientCheckbox", (checkbox) => { controller.doSearch(); });
-    $(document).on("click", "#closeModal", () => { view.closeModal(); });
+    $(document).on("click", ".modal-close", () => { view.closeModal(); });
     $(document).on("click", ".searchResult", (cocktail) => { controller.getRecipeDetails(cocktail.currentTarget.id.substring(12)); });
+    $(document).on("click", ".likedCocktail", (cocktail) => { if (cocktail.target.type != "submit") { controller.getRecipeDetailsForLiked(cocktail.currentTarget.id.substring(13)); } });
     $(document).on("click", ".modal-background", () => { view.closeModal(); });
-    $(document).on("click", ".likeLink", async (recipe) => { if (await controller.isRecipeLiked(recipe.currentTarget.id.substring(5))) { controller.unlikeRecipe(recipe.currentTarget.id.substring(5)) } else { controller.likeRecipe(recipe.currentTarget.id.substring(5)); } });
+    $(document).on("click", ".likeLink", async (recipe) => {if (await controller.isRecipeLiked(recipe.currentTarget.id.substring(5))) { controller.unlikeRecipe(recipe.currentTarget.id.substring(5)) } else { controller.likeRecipe(recipe.currentTarget.id.substring(5), recipe.currentTarget.name); } });
+    $(document).on("click", ".deleteLiked", (cocktail) => { controller.deleteLikedAndRefresh(cocktail.currentTarget.id.substring(11)); });
 
     controller.getLoginStatus();
 
